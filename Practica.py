@@ -1,9 +1,11 @@
-# Завдання 1
-# Користувач вводить з клавіатури набір чисел. Збережіть отримані числа до однозв’язного списку. Після
-# чого покажіть меню, в якому запропонуєте користувачеві
+# Завдання 2
+# Користувач вводить з клавіатури набір рядків. Збережіть отримані рядки до двозв’язного списку. Після чого
+# покажіть меню, в якому запропонуєте користувачеві
 # набір пунктів:
 # 1. Додати елемент до списку.
 # 2. Видалити елемент зі списку.
+# Практичне завдання
+# 1
 # 3. Показати вміст списку.
 # 4. Перевірити, чи є значення у списку.
 # 5. Замінити значення у списку.
@@ -13,9 +15,10 @@
 class Node:
     def __init__(self, data):
         self.data = data
+        self.prev = None
         self.next = None
 
-class LinkedList:
+class DoublyLinkedList:
     def __init__(self):
         self.head = None
 
@@ -28,6 +31,7 @@ class LinkedList:
             while current.next:
                 current = current.next
             current.next = new_node
+            new_node.prev = current
 
     def delete_element(self, value):
         if not self.head:
@@ -35,14 +39,18 @@ class LinkedList:
             return
         if self.head.data == value:
             self.head = self.head.next
+            if self.head:
+                self.head.prev = None
             return
         current = self.head
-        prev = None
         while current:
             if current.data == value:
-                prev.next = current.next
+                if current.next:
+                    current.prev.next = current.next
+                    current.next.prev = current.prev
+                else:
+                    current.prev.next = None
                 return
-            prev = current
             current = current.next
         print("Елемент не знайдено")
 
@@ -52,7 +60,7 @@ class LinkedList:
             return
         current = self.head
         while current:
-            print(current.data, end=" -> ")
+            print(current.data, end=" <-> ")
             current = current.next
         print("None")
 
@@ -87,33 +95,32 @@ def display_menu():
     print("5. Замінити значення у списку")
     print("6. Вийти")
 
-
 def main():
-    linked_list = LinkedList()
+    doubly_linked_list = DoublyLinkedList()
 
     while True:
         display_menu()
         choice = input("Виберіть опцію: ")
 
         if choice == "1":
-            data = input("Введіть число для додавання: ")
-            linked_list.add_element(data)
+            data = input("Введіть рядок для додавання: ")
+            doubly_linked_list.add_element(data)
         elif choice == "2":
-            data = input("Введіть число для видалення: ")
-            linked_list.delete_element(data)
+            data = input("Введіть рядок для видалення: ")
+            doubly_linked_list.delete_element(data)
         elif choice == "3":
             print("Вміст списку:")
-            linked_list.display_list()
+            doubly_linked_list.display_list()
         elif choice == "4":
-            data = input("Введіть число для перевірки: ")
-            if linked_list.check_value(data):
-                print("Число знайдено у списку")
+            data = input("Введіть рядок для перевірки: ")
+            if doubly_linked_list.check_value(data):
+                print("Рядок знайдено у списку")
             else:
-                print("Число не знайдено у списку")
+                print("Рядок не знайдено у списку")
         elif choice == "5":
-            old_value = input("Введіть старе значення: ")
-            new_value = input("Введіть нове значення: ")
-            linked_list.replace_value(old_value, new_value)
+            old_value = input("Введіть старий рядок: ")
+            new_value = input("Введіть новий рядок: ")
+            doubly_linked_list.replace_value(old_value, new_value)
         elif choice == "6":
             print("До побачення!")
             break
